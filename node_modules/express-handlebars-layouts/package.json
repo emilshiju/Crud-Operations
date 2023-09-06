@@ -1,0 +1,11 @@
+{
+  "name": "express-handlebars-layouts",
+  "version": "1.0.0",
+  "description": "Just add to your package.json the express-enhancer module",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Ariel Rey",
+  "license": "MIT"
+}

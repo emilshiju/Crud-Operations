@@ -1,0 +1,17 @@
+<section>
+<div class="bg-secondary">
+  <div class="container d-flex justify-content-center align-items-center min-vh-100">
+    <div class="card p-4" style="width: 600px; height: 450px;">
+        <h2 class="text-center mb-4 text-danger mt-5" >user Home</h2>
+ <br>
+ <br><br><br>
+{{#if loggedIn}}
+  <h2 class="text-center mb-4 text-danger mt-5">Welcome, {{user}}</h2>
+  <a href="/logOut" class="btn btn-danger btn-block form-control" style="height: 40px; margin-top: 20px">Logout</a>
+{{else}}
+  <h2 class="text-center mb-4 text-danger mt-5">Logout</h2>
+  <p>You are already logged in.</p>
+  <a href="/logOut" class="btn btn-danger btn-block form-control" style="height: 40px; margin-top: 20px">Logout</a>
+{{/if}}
+
+{{!-- <a href="/logout" class="btn btn-danger btn-block form-control" style="height: 40px; margin-top: 20px">Logout</a> --}}
