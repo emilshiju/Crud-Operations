@@ -11,10 +11,14 @@ const admin={
 
 exports.login=async(req,res)=>{
     try{
+        if(!req.session.user){
         const locals = {
             invalid: req.query.message
         };
-        res.render('user-login',{locals})
+        res.render('user-login',{ans: locals.invalid,flash: req.flash() })
+        }else{
+            res.render('user-home')
+        }
 
     }catch(err){
         console.log(err)
@@ -25,27 +29,20 @@ exports.postlogin=async(req,res)=>{
    
     try{
         // if(admin.email!=req.body.email){
-        const customers=await customer.findOne({email: req.body.email})
+        const customers=await customer.findOne({email: req.body.email,password:req.body.password})
         console.log(customers)
         if(customers ){
             console.log(88)
             req.session.user=req.body.email
-        // res.render('user-login',{customers,title})
-        // res.render('user-logout', { customers, title, loggedin: true, user: req.body.email });
          res.redirect('/user-home')
         }else{
             console.log(0)
             // req.session.user=null;
-    res.redirect('/?invalid=true')
-    //     title='invalid'
+    // res.redirect('/?invalid=true')
+    res.render('user-login',{invalid:true})
     
-    // res.render('user-login',{title,ans:true})
-      
         }
-    // }else{
-        
-    //     res.redirect('/home')
-    // }
+    
     }catch(err){
         console.log(err)
     }
@@ -68,6 +65,7 @@ exports.logOut=(req,res)=>{
     if(req.session.user){
         req.session.user=null;
         // res.redirect('/true')
+        req.flash('success', 'Successfully logged out');
         res.redirect('/?message=true');
     }
 }
@@ -114,7 +112,12 @@ exports.adminlogout=async(req,res)=>{
 
 exports.signup=async(req,res)=>{
     try{
-        res.render('user-signup');
+        if(req.session.user){
+            res.redirect('/')
+        }else{
+            res.render('user-signup')
+        }
+        // res.render('user-signup');
     }catch(err){
         console.log(err)
     }
@@ -122,6 +125,7 @@ exports.signup=async(req,res)=>{
 
 exports.postsignup=async(req,res)=>{
     try{
+        req.session.user=req.body.email
         console.log(req.body)
 
         const newCustomer = new customer({
@@ -134,7 +138,8 @@ exports.postsignup=async(req,res)=>{
         await newCustomer.save();
         // await req.flash('info','new customer have been aded')
         console.log('Customer saved successfully');
-        res.redirect('/');
+        res.redirect('/user-home');
+        // res.render('user-home')
 
     }catch(err){
         console.log(err)
@@ -147,7 +152,9 @@ exports.postsignup=async(req,res)=>{
 
 
 exports.homepage= async(req,res)=>{
-    req.flash('info', 'new customer has been added');
+    // req.flash('info', 'new customer has been added');
+    const edit=req.query.edit
+    console.log(edit)
         const locals={
             title:'nodejs',
             description:'free nodejs user management system'
@@ -155,7 +162,7 @@ exports.homepage= async(req,res)=>{
         let customers=[];
         let perpage=12;
         let page=req.query.page||1;
-        const message = req.flash('info');
+        const flashMessage = req.flash('success');
 
         try{
             if(req.session.admin){
@@ -170,8 +177,9 @@ exports.homepage= async(req,res)=>{
                 locals,
                 customers,
                 current: page,
+                flashMessage,
+                edit,
                 pages: Math.ceil(count / perpage),
-                message,
                 admin:true
             });
         }else{
@@ -208,8 +216,9 @@ exports.postcustomer = async (req, res) => {
         });
 
         await newCustomer.save();
-        await req.flash('info','new customer have been aded')
+        
         console.log('Customer saved successfully');
+        req.flash('success', 'Customer successfully created');
         res.redirect('/home');
     } catch (error) {
         console.error('Error:', error);
@@ -271,7 +280,9 @@ exports.editpost=async(req,res)=>{
             updateAt:Date.now(),
 
         })
+        res.locals.flash = true;
         console.log(req.body)
+        res.redirect('/home?edit=true')
         // await res.redirect(`/edit/${req.params.id}`)
 
     }catch(err){

@@ -1,3 +1,10 @@
+<style>
+ 
+.alert.alert-success {
+  height: 40px !important; /* Change the height to your desired value */
+}
+
+</style>
 <section>
 <div class="bg-secondary">
   <div class="container d-flex justify-content-center align-items-center min-vh-100">
@@ -14,12 +21,28 @@
   
   <form action="/"id="login-form"  method="POST"class="mt-3">
         <div class="form-group pt-2" >
-           {{!-- {{#if locals.invalid}}
-    <h2 class="text-danger">Invalid email or password</h2>
-    {{/if}} --}}
-    {{#if locals.invalid}}
-    <h2>successfully logined_out</h2>
-    {{/if}}
+        
+{{!-- {{#if flash.success}}
+<div class="alert alert-success" id="flash-message">
+  {{flash.success}}
+  <button type="button" class="close " id="close-flash-message" aria-label="Close d-flex justify-content-end">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+{{/if}} --}}
+{{#if flash.success}}
+<div class="alert alert-success" id="flash-message">
+  <div class="d-flex justify-content-between align-items-center">
+    {{flash.success}}
+    <button type="button" class="close" id="close-flash-message" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+</div>
+{{/if}}
+
+
+
           <label for="email" class="text-info">Email:</label>
           <input type="email" class="form-control " style="height: 50px;" id="email" name="email" required>
         </div>
@@ -31,7 +54,11 @@
         <button type="submit"style="height: 40px;margin-top:20px" class="btn btn-danger btn-block form-control">Login</button>
       </form>
       <br>
+      {{#if ans}}
+    
+      {{else}}
       <a href="/signup">SIGNUP</a>
+      {{/if}}
 
 
 
@@ -40,4 +67,47 @@
   </div>
   </section>
   <body>
-   
+   <script>
+    // Add an event listener to the close button
+document.getElementById('close-flash-message').addEventListener('click', function() {
+    // Find the flash message element
+    var flashMessage = document.getElementById('flash-message');
+
+    // Check if the flash message element exists
+    if (flashMessage) {
+        // Hide the flash message by setting its display style to 'none'
+        flashMessage.style.display = 'none';
+    }
+});
+
+   </script>
+   <!-- Add this code in your "home" page template -->
+<!-- Include jQuery library -->
+{{!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+  $(document).ready(function () {
+    // Check if the "invalid" query parameter is present
+    const urlParams = new URLSearchParams(window.location.search);
+    const loginFailed = urlParams.get('invalid');
+
+    if (loginFailed === 'true') {
+      // Display a pop-up message for login failure
+      alert('Login failed. Please check your credentials and try again.');
+    }
+  });
+</script> --}}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+
+  if ({{invalid}}) {
+ 
+    Swal.fire({
+
+   icon: 'error',
+  title: 'check your crendential',
+  showConfirmButton: false,
+  timer: 1500
+})
+  }
+</script>

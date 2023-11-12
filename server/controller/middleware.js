@@ -13,6 +13,7 @@ exports.loggedin=(req,res,next)=>{
     }else{
         console.log(2)
         next()
+        // res.redirect('/user-home')
     }
 }
 
